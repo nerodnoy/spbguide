@@ -1,9 +1,15 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
 
+menu = ['О сайте', 'Добавить статью', 'Обратная связь', 'Войти']
+
 
 def index(request):
-    return HttpResponse('Страница приложения restaurants')
+    return render(request, 'restaurants/index.html', {'menu': menu, 'title': 'Главная страница'})
+
+
+def about(request):
+    return render(request, 'restaurants/about.html', {'title': 'О сайте'})
 
 
 def categories(request, category_id):
