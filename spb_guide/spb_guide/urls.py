@@ -17,8 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from restaurants.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('restaurants', include('restaurants.urls'))
+    path('', include('restaurants.urls'))
 ]
+
+handler404 = pageNotFound
