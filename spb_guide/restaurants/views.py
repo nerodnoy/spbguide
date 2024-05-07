@@ -2,27 +2,38 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
 from .models import Restaurants
 
-menu = ['О сайте', 'Добавить статью', 'Обратная связь', 'Войти']
+menu = [{'title': 'О сайте', 'url_name': 'about'},
+        {'title': 'Добавить статью', 'url_name': 'add_page'},
+        {'title': 'Обратная связь', 'url_name': 'contact'},
+        {'title': 'Войти', 'url_name': 'login'},
+        ]
 
 
 def index(request):
     posts = Restaurants.objects.all()
-    return render(request, 'restaurants/index.html', {'posts': posts,'menu': menu, 'title': 'Главная страница'})
+    context = {
+        'posts': posts,
+        'menu': menu,
+        'title': 'Главная страница'
+    }
+
+    return render(request, 'restaurants/index.html', context=context)
 
 
 def about(request):
     return render(request, 'restaurants/about.html', {'title': 'О сайте'})
 
 
-def categories(request, category_id):
-    return HttpResponse(f'<h1>Рестораны по категориям</h1><p>{category_id}</p>')
+def add_page(requset):
+    HttpResponse('Добавление статьи')
 
 
-def archive(request, year):
-    if int(year) > 2020:
-        return redirect('home')
+def contact(request):
+    return HttpResponse('Обратная связь')
 
-    return HttpResponse(f'<h1>Архив по годам</h1><p>{year}</p>')
+
+def login(request):
+    return HttpResponse('Авторизация')
 
 
 def pageNotFound(request, exception):

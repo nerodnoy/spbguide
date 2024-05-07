@@ -4,6 +4,7 @@ from .views import *
 urlpatterns = [
     path('', index, name='home'),  # http://127.0.0.1:8000/
     path('about/', about, name='about'),
-    path('categories/<int:category_id>/', categories), # http://127.0.0.1:8000/categories/1/
-    re_path(r'^archive/(?P<year>[0-9]{4})/', archive)
+    path('contact/', contact, name='contact'),
+    path('add_page/', add_page, name='add_page'),
+    path('login/', login, name='login'),
 ]
