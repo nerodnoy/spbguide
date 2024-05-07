@@ -36,5 +36,9 @@ def login(request):
     return HttpResponse('Авторизация')
 
 
+def show_post(requst, post_id):
+    return HttpResponse(f'Отображение статьи с id = {post_id}')
+
+
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
