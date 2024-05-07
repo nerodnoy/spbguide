@@ -25,7 +25,7 @@ def about(request):
 
 
 def add_page(requset):
-    HttpResponse('Добавление статьи')
+    return HttpResponse('Добавление статьи')
 
 
 def contact(request):
