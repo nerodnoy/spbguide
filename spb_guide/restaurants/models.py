@@ -10,9 +10,23 @@ class Restaurants(models.Model):
     time_update = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
 
+    # _id будет добавлено в имя автоматически Джангой
+    # null=True временно заполнит новые поля нулями. Это нужно при makemigrations
+    cat = models.ForeignKey('Category', on_delete=models.PROTECT, null=True)
+
     def __str__(self):
         return self.title
 
     # Здесь создаём ссылку для объекта
     def get_absolute_url(self):
         return reverse('post', kwargs={'post_id': self.pk})
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, db_index=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('category', kwargs={'cat_id': self.pk})
