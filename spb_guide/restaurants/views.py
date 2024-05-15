@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
-from .models import Restaurants
+from .models import Restaurants, Category
 
 menu = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Добавить заведение', 'url_name': 'add_page'},
@@ -11,10 +11,13 @@ menu = [{'title': 'О сайте', 'url_name': 'about'},
 
 def index(request):
     posts = Restaurants.objects.all()
+    cats = Category.objects.all()
     context = {
         'posts': posts,
+        'cats': cats,
         'menu': menu,
-        'title': 'Главная страница'
+        'title': 'Главная страница',
+        'cat_selected': 0,
     }
 
     return render(request, 'restaurants/index.html', context=context)
@@ -36,8 +39,12 @@ def login(request):
     return HttpResponse('Авторизация')
 
 
-def show_post(requst, post_id):
+def show_post(request, post_id):
     return HttpResponse(f'Отображение статьи с id = {post_id}')
+
+
+def show_category(request, cat_id):
+    return HttpResponse(f'Отображение категории с id = {cat_id}')
 
 
 def pageNotFound(request, exception):
