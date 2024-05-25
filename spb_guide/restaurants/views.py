@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Restaurants, Category
 
 menu = [{'title': 'О сайте', 'url_name': 'about'},
@@ -37,8 +37,18 @@ def login(request):
     return HttpResponse('Авторизация')
 
 
-def show_post(request, post_id):
-    return HttpResponse(f'Отображение статьи с id = {post_id}')
+# Поиск по слагу
+def show_post(request, post_slug):
+    post = get_object_or_404(Restaurants, slug=post_slug)
+
+    context = {
+        'post': post,
+        'menu': menu,
+        'title': post.title,
+        'cat_selected': post.cat_id,
+    }
+
+    return render(request, 'restaurants/post.html', context=context)
 
 
 def show_category(request, cat_id):
