@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import *
 from .models import *
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, CreateView
 
 menu = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Добавить заведение', 'url_name': 'add_page'},
@@ -31,6 +31,7 @@ class RestaurantsHome(ListView):
     def get_queryset(self):
         return Restaurants.objects.filter(is_published=True)
 
+
 # def index(request):
 #     posts = Restaurants.objects.all()
 #     context = {
@@ -49,20 +50,30 @@ def about(request):
     })
 
 
-def add_page(request):
-    if request.method == 'POST':
-        form = AddPostForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    else:
-        form = AddPostForm()
+class AddPage(CreateView):
+    form_class = AddPostForm
+    template_name = 'restaurants/add_page.html'
 
-    return render(request, 'restaurants/add_page.html', {
-        'menu': menu,
-        'title': 'Добавление статьи',
-        'form': form,
-    })
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Добавление статьи'
+        context['menu'] = menu
+        return context
+
+# def add_page(request):
+#     if request.method == 'POST':
+#         form = AddPostForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('home')
+#     else:
+#         form = AddPostForm()
+#
+#     return render(request, 'restaurants/add_page.html', {
+#         'menu': menu,
+#         'title': 'Добавление статьи',
+#         'form': form,
+#     })
 
 
 def contact(request):
@@ -73,18 +84,25 @@ def login(request):
     return HttpResponse('Авторизация')
 
 
+class ShowPost(DetailView):
+    model = Restaurants
+    template_name = 'restaurants/post.html'
+    slug_url_kwarg = 'post_slug'
+    context_object_name = 'post'
+
+
 # Поиск по слагу
-def show_post(request, post_slug):
-    post = get_object_or_404(Restaurants, slug=post_slug)
-
-    context = {
-        'post': post,
-        'menu': menu,
-        'title': post.title,
-        'cat_selected': post.cat_id,
-    }
-
-    return render(request, 'restaurants/post.html', context=context)
+# def show_post(request, post_slug):
+#     post = get_object_or_404(Restaurants, slug=post_slug)
+#
+#     context = {
+#         'post': post,
+#         'menu': menu,
+#         'title': post.title,
+#         'cat_selected': post.cat_id,
+#     }
+#
+#     return render(request, 'restaurants/post.html', context=context)
 
 
 class RestaurantsCategory(ListView):
@@ -102,6 +120,7 @@ class RestaurantsCategory(ListView):
 
     def get_queryset(self):
         return Restaurants.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True)
+
 
 # def show_category(request, cat_id):
 #     posts = Restaurants.objects.filter(cat_id=cat_id)
