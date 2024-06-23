@@ -26,7 +26,7 @@ class Restaurants(models.Model):
     class Meta:
         verbose_name = 'Популярные рестораны'
         verbose_name_plural = 'Популярные рестораны'
-        ordering = ['title']
+        ordering = ['id']
 
 
 class Category(models.Model):
