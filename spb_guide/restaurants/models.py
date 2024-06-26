@@ -44,3 +44,13 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
         ordering = ['id']
+
+
+class Feedback(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Обратная связь от {self.name} ({self.email})'

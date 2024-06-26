@@ -73,7 +73,7 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
 class ContactFormView(DataMixin, FormView):
     form_class = ContactForm
     template_name = 'restaurants/contact.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('home')  # Проверьте, что 'home' существует в urls.py
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -81,9 +81,8 @@ class ContactFormView(DataMixin, FormView):
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect('home')
+        form.save()
+        return super().form_valid(form)
 
 
 # def contact(request):
