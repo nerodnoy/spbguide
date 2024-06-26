@@ -1,6 +1,7 @@
 from django.contrib.auth import logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.db.models import Count
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -18,10 +19,10 @@ class RestaurantsHome(DataMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Главная страница')
+        categories = Category.objects.annotate(restaurants_count=Count('restaurants'))
+        c_def = self.get_user_context(title='Главная страница', get_cats=categories)
         return dict(list(context.items()) + list(c_def.items()))
 
-    # метод, который отображает только опубликованные статьи
     def get_queryset(self):
         return Restaurants.objects.filter(is_published=True).select_related('cat')
 
