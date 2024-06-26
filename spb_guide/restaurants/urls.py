@@ -4,7 +4,7 @@ from .views import *
 urlpatterns = [
     path('', RestaurantsHome.as_view(), name='home'),  # http://127.0.0.1:8000/
     path('about/', about, name='about'),
-    path('contact/', contact, name='contact'),
+    path('contact/', ContactFormView.as_view(), name='contact'),
     path('add_page/', AddPage.as_view(), name='add_page'),
     path('login/', LoginUser.as_view(), name='login'),
     path('logout/', logout_user, name='logout'),

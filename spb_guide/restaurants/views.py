@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from .forms import *
 from .models import *
 from .utils import *
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, FormView
 
 
 class RestaurantsHome(DataMixin, ListView):
@@ -54,6 +54,7 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
         c_def = self.get_user_context(title='Добавление статьи')
         return dict(list(context.items()) + list(c_def.items()))
 
+
 # def add_page(request):
 #     if request.method == 'POST':
 #         form = AddPostForm(request.POST, request.FILES)
@@ -69,9 +70,24 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
 #         'form': form,
 #     })
 
+class ContactFormView(DataMixin, FormView):
+    form_class = ContactForm
+    template_name = 'restaurants/contact.html'
+    success_url = reverse_lazy('home')
 
-def contact(request):
-    return HttpResponse('Обратная связь')
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Обратная связь')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('home')
+
+
+# def contact(request):
+#     return HttpResponse('Обратная связь')
 
 
 class ShowPost(DataMixin, DetailView):
@@ -85,6 +101,7 @@ class ShowPost(DataMixin, DetailView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title=context['post'])
         return dict(list(context.items()) + list(c_def.items()))
+
 
 # Поиск по слагу
 # def show_post(request, post_slug):
